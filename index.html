@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Files API</title>
+    <style>
+        details {
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <button id="butDirectory">Click</button>
+    <div id="result"></div>
+    <script>
+        const butDir = document.getElementById('butDirectory');
+        const result = document.querySelector('#result');
+
+        async function showFolderContents(dir, folderElement) {
+            console.log({
+                dir
+            });
+            for await (const entry of dir) {
+                console.log(entry.kind, entry.name);
+                if (entry.kind === 'directory') {
+                    const detail = document.createElement('details');
+                    const summary = document.createElement('summary');
+                    summary.innerText = entry.name;
+                    detail.appendChild(summary);
+
+                    folderElement.appendChild(detail);
+                    console.log({
+                        entry
+                    });
+                    showFolderContents(entry.values(), detail);
+                } else {
+                    const file = document.createElement('div');
+                    file.innerText = entry.name;
+                    folderElement.appendChild(file);
+                }
+            }
+        }
+        butDir.addEventListener('click', async() => {
+            const dirHandle = await window.showDirectoryPicker();
+            console.log({
+                dirHandle
+            });
+            console.log(dirHandle.name);
+            const folderElement = document.createElement('details');
+            const summary = document.createElement('summary');
+            summary.innerText = dirHandle.name;
+            folderElement.appendChild(summary);
+
+            result.appendChild(folderElement);
+            showFolderContents(dirHandle.values(), folderElement);
+        });
+    </script>
+</body>
+
+</html>
