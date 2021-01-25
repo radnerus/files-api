@@ -19,6 +19,12 @@
         const butDir = document.getElementById('butDirectory');
         const result = document.querySelector('#result');
 
+
+        if (!('showDirectoryPicker' in window)) {
+            butDir.style.display = 'none';
+            result.innerText = 'No support for mobile, please try in a supported browser';
+        }
+
         async function showFolderContents(dir, folderElement) {
             console.log({
                 dir
